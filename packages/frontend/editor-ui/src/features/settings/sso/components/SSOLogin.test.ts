@@ -14,7 +14,7 @@ const renderComponent = createComponentRenderer(SSOLogin, {
 	global: {
 		stubs: {
 			N8nButton: {
-				template: '<button data-test-id="sso-button"></button>',
+				template: '<button :data-test-id="$attrs[\'data-test-id\'] || \'sso-button\'"></button>',
 			},
 		},
 	},
@@ -45,5 +45,17 @@ describe('SSOLogin', () => {
 		vi.spyOn(ssoStore, 'showSsoLoginButton', 'get').mockReturnValue(true);
 		const { queryByRole } = renderComponent({ pinia });
 		expect(queryByRole('button')).toBeInTheDocument();
+	});
+
+	it('should render GitHub login button when GitHub is enabled', () => {
+		vi.spyOn(ssoStore, 'isGithubLoginEnabled', 'get').mockReturnValue(true);
+		const { queryByTestId } = renderComponent({ pinia });
+		expect(queryByTestId('github-sso-button')).toBeInTheDocument();
+	});
+
+	it('should not render GitHub login button when GitHub is disabled', () => {
+		vi.spyOn(ssoStore, 'isGithubLoginEnabled', 'get').mockReturnValue(false);
+		const { queryByTestId } = renderComponent({ pinia });
+		expect(queryByTestId('github-sso-button')).not.toBeInTheDocument();
 	});
 });

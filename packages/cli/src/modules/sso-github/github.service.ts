@@ -9,7 +9,7 @@ import {
 	UserRepository,
 } from '@n8n/db';
 import { Service } from '@n8n/di';
-import { randomUUID } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 
 import { BadRequestError } from '@/errors/response-errors/bad-request.error';
 import { JwtService } from '@/services/jwt.service';
@@ -20,6 +20,7 @@ import {
 	GITHUB_TOKEN_URL,
 	GITHUB_USER_URL,
 	GITHUB_EMAILS_URL,
+	UUID_REGEX,
 } from './constants';
 
 interface GithubUser {
@@ -95,11 +96,7 @@ export class GithubSsoService {
 			throw new BadRequestError('Invalid state');
 		}
 
-		if (
-			!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-				parts[1],
-			)
-		) {
+		if (!UUID_REGEX.test(parts[1])) {
 			throw new BadRequestError('Invalid state');
 		}
 
@@ -257,6 +254,10 @@ export class GithubSsoService {
 		const firstName = nameParts[0] ?? githubUser.login;
 		const lastName = nameParts.slice(1).join(' ') || '';
 
+		// Generate a secure random password - this account uses GitHub SSO so the
+		// password field is never used for authentication
+		const unusablePassword = randomBytes(32).toString('hex');
+
 		return await this.userRepository.manager.transaction(async (trx) => {
 			const { user } = await this.userRepository.createUserWithProject(
 				{
@@ -265,7 +266,7 @@ export class GithubSsoService {
 					email,
 					authIdentities: [],
 					role: GLOBAL_MEMBER_ROLE,
-					password: 'no password set',
+					password: unusablePassword,
 				},
 				trx,
 			);
