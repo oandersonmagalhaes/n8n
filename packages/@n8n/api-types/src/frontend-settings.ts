@@ -140,6 +140,10 @@ export interface FrontendSettings {
 			loginLabel: string;
 			loginEnabled: boolean;
 		};
+		github: {
+			loginEnabled: boolean;
+			loginUrl: string;
+		};
 	};
 	publicApi: {
 		enabled: boolean;

@@ -42,6 +42,7 @@ export class ModuleRegistry {
 		'chat-hub',
 		'sso-oidc',
 		'sso-saml',
+		'sso-github',
 		'log-streaming',
 		'ldap',
 		'quick-connect',

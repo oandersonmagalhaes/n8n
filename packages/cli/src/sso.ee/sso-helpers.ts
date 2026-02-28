@@ -79,6 +79,10 @@ export function isOidcCurrentAuthenticationMethod(): boolean {
 	return getCurrentAuthenticationMethod() === 'oidc';
 }
 
+export function isGithubCurrentAuthenticationMethod(): boolean {
+	return getCurrentAuthenticationMethod() === 'github';
+}
+
 export function isSsoCurrentAuthenticationMethod(): boolean {
 	return (
 		isSamlCurrentAuthenticationMethod() ||

@@ -91,6 +91,13 @@ export type PublicFrontendSettings = {
 			/** Required for OIDC authentication redirect URL */
 			loginUrl: FrontendSettings['sso']['oidc']['loginUrl'];
 		};
+		github: {
+			/** Config flag for GitHub login button */
+			loginEnabled: FrontendSettings['sso']['github']['loginEnabled'];
+
+			/** Required for GitHub OAuth2 redirect URL */
+			loginUrl: FrontendSettings['sso']['github']['loginUrl'];
+		};
 	};
 	/** Used to fetch community nodes on preview instance */
 	communityNodesEnabled: FrontendSettings['communityNodesEnabled'];
@@ -263,6 +270,10 @@ export class FrontendService {
 					loginEnabled: false,
 					loginUrl: `${instanceBaseUrl}/${restEndpoint}/sso/oidc/login`,
 					callbackUrl: `${instanceBaseUrl}/${restEndpoint}/sso/oidc/callback`,
+				},
+				github: {
+					loginEnabled: false,
+					loginUrl: `${instanceBaseUrl}/${restEndpoint}/sso/github/login`,
 				},
 			},
 			dataTables: {
@@ -496,6 +507,14 @@ export class FrontendService {
 			});
 		}
 
+		// GitHub OAuth2 login is available without a license
+		const { clientId, clientSecret } = this.globalConfig.sso.github;
+		if (clientId && clientSecret) {
+			Object.assign(this.settings.sso.github, {
+				loginEnabled: true,
+			});
+		}
+
 		if (this.license.isVariablesEnabled()) {
 			this.settings.variables.limit = this.license.getVariablesLimit();
 		}
@@ -557,7 +576,7 @@ export class FrontendService {
 		const {
 			defaultLocale,
 			userManagement: { authenticationMethod, showSetupOnFirstLoad, smtpSetup },
-			sso: { saml: ssoSaml, ldap: ssoLdap, oidc: ssoOidc },
+			sso: { saml: ssoSaml, ldap: ssoLdap, oidc: ssoOidc, github: ssoGithub },
 			authCookie,
 			previewMode,
 			enterprise: { saml, ldap, oidc },
@@ -580,6 +599,10 @@ export class FrontendService {
 				oidc: {
 					loginEnabled: ssoOidc.loginEnabled,
 					loginUrl: ssoOidc.loginUrl,
+				},
+				github: {
+					loginEnabled: ssoGithub.loginEnabled,
+					loginUrl: ssoGithub.loginUrl,
 				},
 			},
 			authCookie,

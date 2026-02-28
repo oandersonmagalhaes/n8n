@@ -4375,6 +4375,7 @@
 	"settings.mfa.toast.noRecoveryCodeLeft.message": "You have used all of your recovery codes. Disable then re-enable two-factor authentication to generate new codes. <a href='/settings/personal' target='_blank' >Open settings</a>",
 	"sso.login.divider": "or",
 	"sso.login.button": "Continue with SSO",
+	"sso.login.github.button": "Continue with GitHub",
 	"executionUsage.currentUsage": "{text} {count}",
 	"executionUsage.currentUsage.text": "You are in a free trial with limited executions. You have",
 	"executionUsage.currentUsage.count": "{n} day left. | {n} days left.",
