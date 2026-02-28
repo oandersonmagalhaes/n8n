@@ -19,6 +19,17 @@ class OidcConfig {
 }
 
 @Config
+class GithubConfig {
+	/** GitHub OAuth2 application client ID. When set together with clientSecret, enables GitHub login. */
+	@Env('N8N_SSO_GITHUB_CLIENT_ID')
+	clientId: string = '';
+
+	/** GitHub OAuth2 application client secret. When set together with clientId, enables GitHub login. */
+	@Env('N8N_SSO_GITHUB_CLIENT_SECRET')
+	clientSecret: string = '';
+}
+
+@Config
 class LdapConfig {
 	/** Whether LDAP-based single sign-on is enabled. */
 	@Env('N8N_SSO_LDAP_LOGIN_ENABLED')
@@ -67,6 +78,9 @@ export class SsoConfig {
 
 	@Nested
 	oidc: OidcConfig;
+
+	@Nested
+	github: GithubConfig;
 
 	@Nested
 	ldap: LdapConfig;

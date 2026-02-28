@@ -22,23 +22,46 @@ const onSSOLogin = async () => {
 		toast.showError(error, 'Error', error.message);
 	}
 };
+
+const onGithubLogin = () => {
+	window.location.href = ssoStore.github.loginUrl;
+};
 </script>
 
 <template>
-	<div v-if="ssoStore.showSsoLoginButton" :class="$style.ssoLogin">
-		<div :class="$style.divider">
-			<span>{{ i18n.baseText('sso.login.divider') }}</span>
+	<div :class="$style.loginOptions">
+		<div v-if="ssoStore.showSsoLoginButton" :class="$style.ssoLogin">
+			<div :class="$style.divider">
+				<span>{{ i18n.baseText('sso.login.divider') }}</span>
+			</div>
+			<N8nButton
+				variant="outline"
+				size="large"
+				:label="i18n.baseText('sso.login.button')"
+				@click="onSSOLogin"
+			/>
 		</div>
-		<N8nButton
-			variant="outline"
-			size="large"
-			:label="i18n.baseText('sso.login.button')"
-			@click="onSSOLogin"
-		/>
+		<div v-if="ssoStore.isGithubLoginEnabled" :class="$style.ssoLogin">
+			<div :class="$style.divider">
+				<span>{{ i18n.baseText('sso.login.divider') }}</span>
+			</div>
+			<N8nButton
+				variant="outline"
+				size="large"
+				:label="i18n.baseText('sso.login.github.button')"
+				data-test-id="github-sso-button"
+				@click="onGithubLogin"
+			/>
+		</div>
 	</div>
 </template>
 
 <style lang="scss" module>
+.loginOptions {
+	display: flex;
+	flex-direction: column;
+}
+
 .ssoLogin {
 	display: flex;
 	flex-direction: column;

@@ -44,6 +44,10 @@ export const useSSOStore = defineStore('sso', () => {
 				loginUrl?: string;
 				callbackUrl?: string;
 			};
+			github?: {
+				loginEnabled: boolean;
+				loginUrl?: string;
+			};
 		};
 		features: {
 			saml: boolean;
@@ -70,6 +74,11 @@ export const useSSOStore = defineStore('sso', () => {
 			oidc.value.loginEnabled = options.config.oidc.loginEnabled;
 			oidc.value.loginUrl = options.config.oidc.loginUrl || '';
 			oidc.value.callbackUrl = options.config.oidc.callbackUrl || '';
+		}
+
+		if (options.config.github) {
+			github.value.loginEnabled = options.config.github.loginEnabled;
+			github.value.loginUrl = options.config.github.loginUrl || '';
 		}
 	};
 
@@ -156,6 +165,20 @@ export const useSSOStore = defineStore('sso', () => {
 	);
 
 	/**
+	 * GitHub OAuth2
+	 */
+
+	const github = ref<{
+		loginEnabled: boolean;
+		loginUrl: string;
+	}>({
+		loginEnabled: false,
+		loginUrl: '',
+	});
+
+	const isGithubLoginEnabled = computed(() => github.value.loginEnabled);
+
+	/**
 	 * LDAP Configuration
 	 */
 
@@ -227,6 +250,9 @@ export const useSSOStore = defineStore('sso', () => {
 		isDefaultAuthenticationOidc,
 		getOidcConfig,
 		saveOidcConfig,
+
+		github,
+		isGithubLoginEnabled,
 
 		ldap,
 		isLdapLoginEnabled,
